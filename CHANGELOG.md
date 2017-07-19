@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+1.0.10
+visualforce-sim
+* Update readme and add jQuery dependencies in client side
+* Update readme to note SF_INSTANCE default value
+
 1.0.9
 * Fix usage help message
 

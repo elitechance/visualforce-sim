@@ -1,6 +1,6 @@
 {
   "name": "visualforce-sim",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Visualforce client and server simulator",
   "main": "index.js",
   "bin": {

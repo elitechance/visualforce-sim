@@ -19,6 +19,7 @@ $ PORT=4000 visualforce-sim
 ```
 
 #### Running the simulator to use live @RemoteAction methods
+If SF_INSTANCE is not set, it will use https://login.salesforce.com 
 ```bash
 $ cd <web application project>
 $ SF_USERNAME=<username> SF_PASSWORD=<password> SF_INSTANCE=<instance url> PORT=4000 visualforce-sim -l
@@ -26,7 +27,9 @@ $ SF_USERNAME=<username> SF_PASSWORD=<password> SF_INSTANCE=<instance url> PORT=
 
 
 #### Sample remoting for mocked Apex classes
+Right now visualforce-sim javascript client requires jQuery
 ```html
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="node_modules/visualforce-sim/visualforce-sim-client.js"></script>
 <script>
     function callback(data) {
