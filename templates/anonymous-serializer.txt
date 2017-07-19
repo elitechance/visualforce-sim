@@ -1,0 +1,5 @@
+String responseSerializer(Object obj) {
+    Object filteredObj = filterResponse(obj);
+    return 'VISUALFORCE_SIM|'+JSON.serialize(filteredObj);
+}
+System.debug(responseSerializer(%s));

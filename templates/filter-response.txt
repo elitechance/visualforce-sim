@@ -1,0 +1,27 @@
+String getType(Object obj) {
+    if (obj instanceof List<object>) { return 'List'; }
+    if (obj instanceof SelectOption) { return 'SelectOption'; }
+    return '';
+}
+
+Object filterResponse(Object obj) {
+    List<string> optionList = new List<string>();
+    if (getType(obj).equals('List')) {
+
+        List<object> objectList = (List<object>) obj;
+
+        if (objectList.size() <= 0) { return obj; }
+
+        if (getType(objectList.get(0)).equals('SelectOption')) {
+            for(Object option: objectList) {
+                SelectOption selectOption = (SelectOption) option;
+                optionList.add(selectOption.getValue());
+            }
+            return optionList;
+        }
+        else {
+            return obj;
+        }
+    }
+    return obj;
+}
