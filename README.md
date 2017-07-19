@@ -35,7 +35,7 @@ If you want set your customer filter
 $ visualforce-sim -f filter.txt
 ```
 
-## Show command line usage
+#### Show command line usage
 ```bash
 $ visualforce-sim --help
 ```
