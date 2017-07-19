@@ -24,7 +24,8 @@ class WebServer {
 
     private initCommander() {
         commander
-            .option('-l, --live', 'Use Salesforce @RemoteAction.  This will read from SF_PASSWORD, and SF_USERNAME, SF_INSTANCE environment variables for credentials')
+            .option('-l, --live', 'Use Salesforce @RemoteAction methods. This will read from SF_PASSWORD, \n' +
+                '\t\t\t\tSF_USERNAME, and SF_INSTANCE environment variables for credentials')
             .option('-f, --filter <file>', 'File that contains implementation of "Object filterResponse(Object obj)" function')
             .option('-s, --show-filter', 'Show default implementation of filter')
             .parse(process.argv);

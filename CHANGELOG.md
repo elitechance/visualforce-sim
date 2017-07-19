@@ -1,5 +1,9 @@
 Changelog
 ---------
+
+1.0.9
+* Fix usage help message
+
 1.0.8
 * Remove debug log
 
