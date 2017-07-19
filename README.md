@@ -25,6 +25,21 @@ $ cd <web application project>
 $ SF_USERNAME=<username> SF_PASSWORD=<password> SF_INSTANCE=<instance url> PORT=4000 visualforce-sim -l
 ```
 
+#### Customer filter
+If you want to show the default filter being passed in executeAnonymous
+```bash
+$ visualforce-sim -s
+```
+If you want set your customer filter
+```bash
+$ visualforce-sim -f filter.txt
+```
+
+## Show command line usage
+```bash
+$ visualforce-sim --help
+```
+
 
 #### Sample remoting for mocked Apex classes
 Right now visualforce-sim javascript client requires jQuery

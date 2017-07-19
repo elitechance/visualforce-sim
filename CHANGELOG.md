@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+1.1.0
+* Add custom filter support
+* Add custom filter example in readme
+* Add cli usage in readme
+
 1.0.10
 visualforce-sim
 * Update readme and add jQuery dependencies in client side

@@ -10,6 +10,7 @@ import bodyParser = require("body-parser");
 import commander = require("commander");
 import salesForce = require('jsforce');
 import SalesforceSoap from "./lib/salesforce-soap";
+import fs = require('fs');
 
 class WebServer {
     private _express = express();
@@ -26,15 +27,26 @@ class WebServer {
         commander
             .option('-l, --live', 'Use Salesforce @RemoteAction methods. This will read from SF_PASSWORD, \n' +
                 '\t\t\t\tSF_USERNAME, and SF_INSTANCE environment variables for credentials')
-            .option('-f, --filter <file>', 'File that contains implementation of "Object filterResponse(Object obj)" function')
+            .option('-f, --filter <file>', 'Set custom filter implementation')
             .option('-s, --show-filter', 'Show default implementation of filter')
             .parse(process.argv);
+    }
+
+    private setCustomFilter(fileName:string) {
+        try {
+            this._saleforceSoap.filterScript = fs.readFileSync(fileName, 'utf8');
+        }
+        catch (error) {
+            this.errorMessage(error.message);
+        }
     }
 
     private setupServer() {
         let isLive = commander['live'];
         let showFilter = commander['showFilter'];
+        let customerFilter = commander['filter'];
         if (showFilter) { this.showFilter(); return; }
+        if (customerFilter) {this.setCustomFilter(customerFilter);}
 
         if (isLive) {
             this._isLive = true;
