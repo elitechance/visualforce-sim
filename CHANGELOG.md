@@ -1,7 +1,10 @@
 Changelog
 ---------
 
-1.1.0
+1.1.11
+* Fix readme typo
+
+1.1.10
 * Add custom filter support
 * Add custom filter example in readme
 * Add cli usage in readme

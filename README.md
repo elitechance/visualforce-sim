@@ -25,12 +25,12 @@ $ cd <web application project>
 $ SF_USERNAME=<username> SF_PASSWORD=<password> SF_INSTANCE=<instance url> PORT=4000 visualforce-sim -l
 ```
 
-#### Customer filter
+#### Custom filter
 If you want to show the default filter being passed in executeAnonymous
 ```bash
 $ visualforce-sim -s
 ```
-If you want set your customer filter
+If you want set your custom filter
 ```bash
 $ visualforce-sim -f filter.txt
 ```
