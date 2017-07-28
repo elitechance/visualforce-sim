@@ -11,12 +11,16 @@ import commander = require("commander");
 import salesForce = require('jsforce');
 import SalesforceSoap from "./lib/salesforce-soap";
 import fs = require('fs');
+import cheerio = require('cheerio');
+import interceptor = require('express-interceptor');
 
 class WebServer {
     private _express = express();
     private _connection;
     private _saleforceSoap:SalesforceSoap = new SalesforceSoap();
     private _isLive:boolean = false;
+    private _io:any;
+    private _watchFiles:boolean;
 
     constructor() {
         this.initCommander();
@@ -29,6 +33,7 @@ class WebServer {
                 '\t\t\t\tSF_USERNAME, and SF_INSTANCE environment variables for credentials')
             .option('-f, --filter <file>', 'Set custom filter implementation')
             .option('-s, --show-filter', 'Show default implementation of filter')
+            .option('-w, --watch-files', 'Watch changes and reload browser')
             .parse(process.argv);
     }
 
@@ -45,6 +50,7 @@ class WebServer {
         let isLive = commander['live'];
         let showFilter = commander['showFilter'];
         let customerFilter = commander['filter'];
+        this.watchFiles = commander['watchFiles'];
         if (showFilter) { this.showFilter(); return; }
         if (customerFilter) {this.setCustomFilter(customerFilter);}
 
@@ -53,7 +59,7 @@ class WebServer {
             this.salesforceLogin();
         }
         else {
-            this.initExpress();
+            this.initWebServer();
         }
     }
 
@@ -69,17 +75,74 @@ class WebServer {
         process.exit(0);
     }
 
-    private initExpress() {
+    private interceptHtml(request, response) {
+        return {
+            isInterceptable: function () {
+                return /text\/html/.test(response.get('Content-Type'));
+            },
+            intercept: (body, send) => {
+                if (body.match(/<html>/) != null && body.match(/<\/html>/) != null) {
+                    let $document = cheerio.load(body);
+                    let watcherScript = fs.readFileSync(__dirname+'/watcher.js');
+                    $document('body').append('<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>');
+                    $document('body').append('<script>'+watcherScript+'</script>');
+                    send($document.html());
+                }
+                else {
+                    send(body);
+                }
+            }
+        }
+    }
+
+    private reloadWebApp() {
+        for (let socketId in this.io.sockets.connected) {
+            this.io.sockets.connected[socketId].broadcast.emit('reload');
+            break;
+        }
+    }
+
+    private setupWatchFiles() {
+        let watch = require('watch');
+        let options = {
+            ignoreUnreadableDir: true,
+            ignoreDotFiles: true
+        };
+        watch.watchTree(process.cwd(), options,(f, curr, prev) => {
+            if (typeof f == "object" && prev === null && curr === null) {
+                // Finished walking the tree
+            } else if (prev === null) {
+                // f is a new file
+                this.reloadWebApp();
+            } else if (curr.nlink === 0) {
+                // f was removed
+                this.reloadWebApp();
+            } else {
+                // f was changed
+                this.reloadWebApp();
+            }
+        });
+    }
+
+    initWebServer() {
         let port = process.env['PORT'] || 3000;
-        this.express.listen(port, () => {
+        let server = require('http').Server(this.express);
+        this.io = require('socket.io')(server);
+
+        server.listen(port, () =>{
             console.log("Running on port ", port);
             this.express.use(bodyParser.json());
+            this.express.use(interceptor(this.interceptHtml));
             this.express.use("/", express.static('./'));
             if (this._isLive) {
                 this.express.post("/apex/remote", (req, res) =>{ this.apexRemoteLive(req, res); });
             }
             else {
                 this.express.post("/apex/remote", (req, res) =>{ this.apexRemote(req, res); });
+            }
+
+            if (this.watchFiles) {
+                this.setupWatchFiles();
             }
         });
     }
@@ -106,7 +169,7 @@ class WebServer {
             this._saleforceSoap.sessionId = this._connection.accessToken;
             this._saleforceSoap.instanceUrl = this._connection.instanceUrl;
             this._saleforceSoap.version = this._connection.version;
-            this.initExpress();
+            this.initWebServer();
         });
     }
 
@@ -209,6 +272,21 @@ class WebServer {
         this._express = value;
     }
 
+    get io(): any {
+        return this._io;
+    }
+
+    set io(value: any) {
+        this._io = value;
+    }
+
+    get watchFiles(): boolean {
+        return this._watchFiles;
+    }
+
+    set watchFiles(value: boolean) {
+        this._watchFiles = value;
+    }
 }
 
 let webServer = new WebServer();

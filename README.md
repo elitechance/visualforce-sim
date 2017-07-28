@@ -22,7 +22,16 @@ $ PORT=4000 visualforce-sim
 If SF_INSTANCE is not set, it will use https://login.salesforce.com 
 ```bash
 $ cd <web application project>
-$ SF_USERNAME=<username> SF_PASSWORD=<password> SF_INSTANCE=<instance url> PORT=4000 visualforce-sim -l
+$ export SF_USERNAME=<username>
+$ export SF_PASSWORD=<password>
+$ export SF_INSTANCE=<instance url>
+$ visualforce-sim -l
+```
+
+#### Auto reload browser when editing files in `<web application project>`
+```bash
+$ cd <web application project>
+$ visualforce-sim -w
 ```
 
 #### Custom filter

@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+1.2.0
+* Support for watching edited files
+
 1.1.11
 * Fix readme typo
 
