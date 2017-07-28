@@ -13,8 +13,9 @@ import SalesforceSoap from "./lib/salesforce-soap";
 import fs = require('fs');
 import cheerio = require('cheerio');
 import interceptor = require('express-interceptor');
+import Base from "./lib/base";
 
-class WebServer {
+class WebServer extends Base {
     private _express = express();
     private _connection;
     private _saleforceSoap:SalesforceSoap = new SalesforceSoap();
@@ -23,6 +24,7 @@ class WebServer {
     private _watchFiles:boolean;
 
     constructor() {
+        super();
         this.initCommander();
         this.setupServer();
     }
@@ -34,6 +36,8 @@ class WebServer {
             .option('-f, --filter <file>', 'Set custom filter implementation')
             .option('-s, --show-filter', 'Show default implementation of filter')
             .option('-w, --watch-files', 'Watch changes and reload browser')
+            .option('-v, --verbose', 'Display info logs')
+            .option('-x, --salesforce-verbose', 'Display Salesforce request logs')
             .parse(process.argv);
     }
 
@@ -51,11 +55,13 @@ class WebServer {
         let showFilter = commander['showFilter'];
         let customerFilter = commander['filter'];
         this.watchFiles = commander['watchFiles'];
+        this.verbose = commander['verbose'];
         if (showFilter) { this.showFilter(); return; }
         if (customerFilter) {this.setCustomFilter(customerFilter);}
 
         if (isLive) {
             this._isLive = true;
+            this._saleforceSoap.verbose = commander['salesforceVerbose'];
             this.salesforceLogin();
         }
         else {
@@ -104,26 +110,14 @@ class WebServer {
     }
 
     private setupWatchFiles() {
-        console.log("File watcher enable");
-        let watch = require('watch');
-        let options = {
-            ignoreUnreadableDir: true,
-            ignoreDotFiles: true
-        };
-        watch.watchTree(process.cwd(), options,(f, curr, prev) => {
-            if (typeof f == "object" && prev === null && curr === null) {
-                // Finished walking the tree
-            } else if (prev === null) {
-                // f is a new file
-                this.reloadWebApp();
-            } else if (curr.nlink === 0) {
-                // f was removed
-                this.reloadWebApp();
-            } else {
-                // f was changed
+        let chokidar = require('chokidar');
+        chokidar.watch(process.cwd(), {ignored: /(node_modules|\/\.)/}).on('all', (event, path) => {
+            if (event != 'add' && event != 'addDir') {
+                this.logger("Reload Web App", event, path);
                 this.reloadWebApp();
             }
         });
+
     }
 
     initWebServer() {
@@ -136,6 +130,7 @@ class WebServer {
             this.express.use(bodyParser.json());
 
             if (this.watchFiles) {
+                console.log("Watch files enabled");
                 this.express.use(interceptor(this.interceptHtml));
                 this.setupWatchFiles();
             }
@@ -156,8 +151,10 @@ class WebServer {
         process.exit(1);
     }
 
-    private logger(...args) {
-        console.log.apply(this, args);
+    protected logger(...args) {
+        if (this.verbose) {
+            console.log.apply(this, args);
+        }
     }
 
     private salesforceLogin() {
@@ -167,8 +164,10 @@ class WebServer {
         if (!instance) { instance = 'https://login.salesforce.com'; }
 
         let connection = new salesForce.Connection({ loginUrl : instance });
+        this.logger("Logging in to Salesforce");
         connection.login(username, password, (error, userInfo) => {
             if (error) { this.errorMessage(error); }
+            this.logger("Login success");
             this._connection = connection;
             this._saleforceSoap.sessionId = this._connection.accessToken;
             this._saleforceSoap.instanceUrl = this._connection.instanceUrl;
@@ -291,6 +290,7 @@ class WebServer {
     set watchFiles(value: boolean) {
         this._watchFiles = value;
     }
+
 }
 
 let webServer = new WebServer();

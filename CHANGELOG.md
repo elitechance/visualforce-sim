@@ -1,5 +1,11 @@
 Changelog
 ---------
+
+1.2.2
+* Replace npm watch with chokidar
+* Support verbose logging
+* Support verbose logging on Salesforce soap request
+
 1.2.1
 * Support for multiple open browsers
 

@@ -1,8 +1,9 @@
 import fs = require('fs');
 import util = require("util");
 import http = require('https');
+import Base from "./base";
 
-export default class SalesforceSoap {
+export default class SalesforceSoap extends Base {
     private _sessionId:string;
     private _filterScript:string;
     private _instanceUrl:string;
@@ -108,9 +109,13 @@ export default class SalesforceSoap {
                 responseData += data;
             });
             response.on('end', () =>{
+                this.logger("Invoke", functionPayload);
+                this.logger("XML response", responseData);
                 callback(null, this.parseResponseJson(responseData));
             });
             response.on('error', (error) =>{
+                this.logger("Invoke", functionPayload);
+                this.logger("XML request error", error);
                 callback(error, null);
             })
         });
