@@ -1,5 +1,7 @@
 Changelog
 ---------
+1.2.1
+* Support for multiple open browsers
 
 1.2.0
 * Support for watching edited files

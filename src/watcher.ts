@@ -11,7 +11,7 @@ class Watcher {
     }
 
     private setupWatchers() {
-        this.socket.on('reload', () => {
+        this.socket.on('reload', (data) => {
             location.reload();
         });
     }

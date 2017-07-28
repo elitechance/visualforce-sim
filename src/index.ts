@@ -78,10 +78,10 @@ class WebServer {
     private interceptHtml(request, response) {
         return {
             isInterceptable: function () {
-                return /text\/html/.test(response.get('Content-Type'));
+                return true;
             },
             intercept: (body, send) => {
-                if (body.match(/<html>/) != null && body.match(/<\/html>/) != null) {
+                if (body.match(/<html/) != null && body.match(/<\/html>/) != null) {
                     let $document = cheerio.load(body);
                     let watcherScript = fs.readFileSync(__dirname+'/watcher.js');
                     $document('body').append('<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>');
@@ -96,13 +96,15 @@ class WebServer {
     }
 
     private reloadWebApp() {
+        let socket;
         for (let socketId in this.io.sockets.connected) {
-            this.io.sockets.connected[socketId].broadcast.emit('reload');
-            break;
+            socket = this.io.sockets.connected[socketId];
+            socket.emit('reload', true);
         }
     }
 
     private setupWatchFiles() {
+        console.log("File watcher enable");
         let watch = require('watch');
         let options = {
             ignoreUnreadableDir: true,
@@ -132,7 +134,12 @@ class WebServer {
         server.listen(port, () =>{
             console.log("Running on port ", port);
             this.express.use(bodyParser.json());
-            this.express.use(interceptor(this.interceptHtml));
+
+            if (this.watchFiles) {
+                this.express.use(interceptor(this.interceptHtml));
+                this.setupWatchFiles();
+            }
+
             this.express.use("/", express.static('./'));
             if (this._isLive) {
                 this.express.post("/apex/remote", (req, res) =>{ this.apexRemoteLive(req, res); });
@@ -141,9 +148,6 @@ class WebServer {
                 this.express.post("/apex/remote", (req, res) =>{ this.apexRemote(req, res); });
             }
 
-            if (this.watchFiles) {
-                this.setupWatchFiles();
-            }
         });
     }
 
