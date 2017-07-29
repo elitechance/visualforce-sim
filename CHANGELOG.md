@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+1.2.3
+* Fix bug when checking if file is an HTML file
+
 1.2.2
 * Replace npm watch with chokidar
 * Support verbose logging

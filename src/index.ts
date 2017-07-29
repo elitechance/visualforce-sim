@@ -87,7 +87,7 @@ class WebServer extends Base {
                 return true;
             },
             intercept: (body, send) => {
-                if (body.match(/<html/) != null && body.match(/<\/html>/) != null) {
+                if (body.match(/<html/) != null && body.trim().match(/<\/html>$/) != null) {
                     let $document = cheerio.load(body);
                     let watcherScript = fs.readFileSync(__dirname+'/watcher.js');
                     $document('body').append('<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>');
@@ -135,7 +135,7 @@ class WebServer extends Base {
                 this.setupWatchFiles();
             }
 
-            this.express.use("/", express.static('./'));
+            this.express.use("/", express.static(process.cwd()));
             if (this._isLive) {
                 this.express.post("/apex/remote", (req, res) =>{ this.apexRemoteLive(req, res); });
             }
