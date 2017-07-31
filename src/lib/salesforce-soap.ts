@@ -73,7 +73,8 @@ export default class SalesforceSoap extends Base {
         if (!matches || matches.length <= 0) return [];
         let jsonLine = matches[0];
         jsonLine = jsonLine.replace('DEBUG|VISUALFORCE_SIM&amp;#124;', '');
-        let node = JSON.parse(entities.decode(jsonLine));
+        jsonLine = Buffer.from(jsonLine, "base64").toString("utf8");
+        let node = JSON.parse(jsonLine);
         if (node instanceof Array) {
             node = node.map(property => {
                 if (property['attributes']) {

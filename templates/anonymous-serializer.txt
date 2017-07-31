@@ -1,5 +1,7 @@
 String responseSerializer(Object obj) {
     Object filteredObj = filterResponse(obj);
-    return 'VISUALFORCE_SIM|'+JSON.serialize(filteredObj);
+    String serializedObject = JSON.serialize(filteredObj);
+    String encodedString = EncodingUtil.base64Encode(Blob.valueof(serializedObject));
+    return 'VISUALFORCE_SIM|'+encodedString;
 }
 System.debug(responseSerializer(%s));

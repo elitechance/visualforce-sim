@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+1.2.4
+* Remove html entities decoding and replace with base64 for better simulation of data.
+
 1.2.3
 * Fix bug when checking if file is an HTML file
 
