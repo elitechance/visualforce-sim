@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+1.2.5
+* Reload page and not use cache
+
 1.2.4
 * Remove html entities decoding and replace with base64 for better simulation of data.
 

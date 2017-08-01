@@ -12,7 +12,7 @@ class Watcher {
 
     private setupWatchers() {
         this.socket.on('reload', (data) => {
-            location.reload();
+            location.reload(true);
         });
     }
 
