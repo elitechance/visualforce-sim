@@ -79,3 +79,11 @@ var ApexController = (function () {
 }());
 exports.default = ApexController;
 ```
+
+#### Setting custom api base path
+```html
+<script>
+    ...
+    Visualforce.remoting.Manager.serverApiBasePath('http://localhost:4000');
+</script>
+```

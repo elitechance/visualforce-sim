@@ -5,6 +5,7 @@
  */
 
 import express =  require('express');
+import cors = require('cors');
 import {Express, Request, Response} from "express";
 import bodyParser = require("body-parser");
 import commander = require("commander");
@@ -126,8 +127,9 @@ class WebServer extends Base {
         this.io = require('socket.io')(server);
 
         server.listen(port, () =>{
-            console.log("Running on port ", port);
+            console.log("Running on port:", port);
             this.express.use(bodyParser.json());
+            this.express.use(cors());
 
             if (this.watchFiles) {
                 console.log("Watch files enabled");
@@ -294,4 +296,3 @@ class WebServer extends Base {
 }
 
 let webServer = new WebServer();
-

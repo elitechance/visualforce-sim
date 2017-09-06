@@ -62,3 +62,4 @@ typings/
 *.map
 *.iml
 *.js
+test.xml

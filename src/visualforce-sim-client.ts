@@ -4,10 +4,21 @@
 
 declare let $:any;
 class Manager {
+
+    private _serverApiBasePath: string = '';
+
+    get serverApiBasePath(): string {
+        return this._serverApiBasePath;
+    }
+
+    set serverApiBasePath(value: string) {
+        this._serverApiBasePath = value;
+    }
+
     private request(args, callback) {
         $.ajax({
             type:'POST',
-            url:'/apex/remote',
+            url:this.serverApiBasePath+'/apex/remote',
             data: JSON.stringify(args),
             contentType:'application/json',
             success: (data) => {

@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+1.3.0
+* Enable CORS
+* Add custom base path for visualforce js client
+
 1.2.5
 * Reload page and not use cache
 
