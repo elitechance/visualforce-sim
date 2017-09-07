@@ -61,5 +61,6 @@ typings/
 .vscode
 *.map
 *.iml
-*.js
+*.js.map
 test.xml
+test.js
