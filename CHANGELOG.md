@@ -1,6 +1,9 @@
 Changelog
 ---------
 
+1.3.1
+* Include transpiles javascript in repo
+
 1.3.0
 * Enable CORS
 * Add custom base path for visualforce js client
