@@ -169,11 +169,14 @@ var WebServer = (function (_super) {
             if (error) {
                 _this.errorMessage(error);
             }
-            _this.logger("Login success");
             _this._connection = connection;
             _this._saleforceSoap.sessionId = _this._connection.accessToken;
             _this._saleforceSoap.instanceUrl = _this._connection.instanceUrl;
             _this._saleforceSoap.version = _this._connection.version;
+            _this.logger("Login success");
+            _this.logger("  Session ID: ", _this._connection.accessToken);
+            _this.logger("  Instance URL: ", _this._connection.instanceUrl);
+            _this.logger("  Version: ", _this._connection.version);
             _this.initWebServer();
         });
     };

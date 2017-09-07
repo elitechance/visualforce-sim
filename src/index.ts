@@ -169,11 +169,14 @@ class WebServer extends Base {
         this.logger("Logging in to Salesforce");
         connection.login(username, password, (error, userInfo) => {
             if (error) { this.errorMessage(error); }
-            this.logger("Login success");
             this._connection = connection;
             this._saleforceSoap.sessionId = this._connection.accessToken;
             this._saleforceSoap.instanceUrl = this._connection.instanceUrl;
             this._saleforceSoap.version = this._connection.version;
+            this.logger("Login success");
+            this.logger("  Session ID: ", this._connection.accessToken);
+            this.logger("  Instance URL: ", this._connection.instanceUrl);
+            this.logger("  Version: ", this._connection.version);
             this.initWebServer();
         });
     }

@@ -27,6 +27,7 @@
     "chokidar": "^1.7.0",
     "clipboardy": "^1.1.4",
     "commander": "^2.11.0",
+    "cors": "^2.8.4",
     "express": "^4.15.3",
     "express-interceptor": "^1.2.0",
     "format-json": "^1.0.3",

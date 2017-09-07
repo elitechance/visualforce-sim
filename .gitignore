@@ -64,3 +64,4 @@ typings/
 *.js.map
 test.xml
 test.js
+package-lock.json

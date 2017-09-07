@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+1.3.2
+* Include cors npm module
+* Show connection details after succesful login
+
 1.3.1
 * Include transpiles javascript in repo
 
