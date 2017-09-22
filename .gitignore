@@ -65,3 +65,4 @@ typings/
 test.xml
 test.js
 package-lock.json
+dist

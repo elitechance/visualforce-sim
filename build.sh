@@ -1,4 +1,5 @@
 #!/bin/sh
+rm -rf dist
 tsc
 cp -a templates dist/
 cp package.json dist/
