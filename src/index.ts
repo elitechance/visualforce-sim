@@ -84,11 +84,15 @@ class WebServer extends Base {
 
     private interceptHtml(request, response) {
         return {
-            isInterceptable: function () {
+            isInterceptable: function (params) {
+                const path = request.path.replace(/\/$/, '');
+                if (path.match(/\.(tif|tiff|bmp|bpg|pcx|ico|gif|jpeg|jpg|png|svg)$/i)) {
+                    return false;
+                }
                 return true;
             },
             intercept: (body, send) => {
-                if (body.match(/<html/) != null && body.trim().match(/<\/html>$/) != null) {
+                if (body && body.match(/<html/) != null && body.trim().match(/<\/html>$/) != null) {
                     let $document = cheerio.load(body);
                     let watcherScript = fs.readFileSync(__dirname+'/watcher.js');
                     $document('body').append('<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>');

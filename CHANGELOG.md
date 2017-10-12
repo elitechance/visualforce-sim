@@ -1,6 +1,10 @@
 ## Changelog
 ---------
 
+1.3.4
+
+* Fix issue when serving images
+
 1.3.3
 
 * Fix repository
