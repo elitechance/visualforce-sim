@@ -84,6 +84,6 @@ exports.default = ApexController;
 ```html
 <script>
     ...
-    Visualforce.remoting.Manager.serverApiBasePath('http://localhost:4000');
+    Visualforce.remoting.Manager.serverApiBasePath = 'http://localhost:4000';
 </script>
 ```

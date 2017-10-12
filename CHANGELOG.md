@@ -1,6 +1,10 @@
 ## Changelog
 ---------
 
+1.3.5
+
+* Fix readme on how to use custom api base path
+
 1.3.4
 
 * Fix issue when serving images
