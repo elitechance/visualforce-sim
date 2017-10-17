@@ -22,7 +22,10 @@ class Manager {
             data: JSON.stringify(args),
             contentType:'application/json',
             success: (data) => {
-                callback(data);
+                callback(data,{statusCode: 200, result: data});
+            },
+            error: (data) => {
+                callback(data,{statusCode: 500, result: data});
             }
         });
     }

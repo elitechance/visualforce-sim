@@ -1,6 +1,10 @@
 ## Changelog
 ---------
 
+1.3.6
+
+* Add callback statusCode and result
+
 1.3.5
 
 * Fix readme on how to use custom api base path
