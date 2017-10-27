@@ -1,6 +1,11 @@
 ## Changelog
 ---------
 
+1.3.7
+
+* Fix readme and add better description
+* Add keywords
+
 1.3.6
 
 * Add callback statusCode and result
